@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-points* quicksort(A, lo, hi) {
+points* quicksort(points* A ,int lo, int hi) {
   // Ensure indices are in correct order
   if(lo >= hi || lo < 0)
     return(NULL);
@@ -50,11 +50,11 @@ points* quicksort(A, lo, hi) {
 }
 
 // Divides array into two partitions
-partition(A, lo, hi) { 
+int partition(points* A, int lo, int hi) { 
   
-  int mid, pivot;
+  int mid, pivot, i;
   
-  int mid = (lo + hi)/2;
+  mid = (lo + hi)/2;
   if(A[mid] < A[lo]);
     swap(A[lo], A[mid]);
   if(A[hi] < A[lo]);
@@ -64,20 +64,21 @@ partition(A, lo, hi) {
   pivot = A[hi];
 
   // Temporary pivot index
-  i := lo - 1
+  i = lo - 1;
 
-  for j := lo to hi - 1 do 
+  for(j = lo; hi - 1; i--) {
     // If the current element is less than or equal to the pivot
-    if A[j] <= pivot then 
+    if(A[j] <= pivot) { 
       // Move the temporary pivot index forward
-      i := i + 1
+      i = i + 1;
       // Swap the current element with the element at the temporary pivot index
-      swap A[i] with A[j]
-
+      swap(A[i], A[j]);
+    }
+  }
   // Move the pivot element to the correct pivot position (between the smaller and larger elements)
-  i := i + 1
-  swap A[i] with A[hi]
-  return i // the pivot index
+  i = i + 1;
+  swap(A[i], A[hi]);
+  return i;
 }
 
 int connect(lower, upper, points) {
