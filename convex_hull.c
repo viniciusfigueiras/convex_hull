@@ -72,11 +72,11 @@ int partition(points *A, int lo, int hi) {
   int mid, pivot, i; 
   mid = selection(lo, hi);
 
-  if(A[mid] < A[lo])
+  if(A[mid].x < A[lo].x)
     swap(A, lo, mid);
-  if(A[hi] < A[lo])
+  if(A[hi].x < A[lo].x)
     swap(A, lo, hi);
-  if(A[mid] < A[hi])
+  if(A[mid].x < A[hi].x)
     swap(A, mid, hi);
 
   // Temporary pivot index
@@ -97,46 +97,73 @@ int partition(points *A, int lo, int hi) {
   return i;
 }
 
-int connect(lower, upper, points) {
-  
+int median(points *A, int lo, int hi) {
+    //range of array A
+    int A_range = hi - lo + 1;
+    if(A_range%2==0) {
+      return((A[A_range/2] + A[A_range/2-1])/2);
+    } 
+    else {
+      return A[A_range/2];
+    } 
 }
 
-int upper_hull(points p_points, int* x_min_point, int* x_max_point) {
-  
-  int x_min = p_points[0].x;
-  int y_min = p_points[0].y;
-  int x_max = p_points[0].x;
-  int y_max = p_points[0].y;
-  points T[size];
-  int i, p_min, p_max;
-  //finding the max and min points for the upper hull division
-  for(i = 1; i < size; i++) {
+void bridge(points *T, int a, points *Pi, points *Pj) {
++
+}
 
-    if(p_points[i].x <= x_min) {
-      if(p_points[i].y >= y_min) {
-        x_min = p_points[i].x;
-        y_min = p_points[i].y;
-        p_min = i;
-      }
-    }
-    else if(p_points[i].x >= x_max) {
-      if(p_points[i].y >= y_max) {
-        x_max = p_points[i].x;
-        y_max = p_points[i].y;
-        p_max = i;
-      }
+int connect(int lo, int hi, int size_s, points *T) {
+  int a = median(T, lo, hi);
+  points Pi, Pj;
+  points Sl[size_s], Sr[size_s]; //Sl and Sr will have max size size_s
+  int n_sl = 0; 
+  int n_sr = 0; //Sl and Sr # of points for static arrays
+  bridge(T, a, Pi, Pj);
+
+  for(i = 0; i < size_s; i++) {
+    if(T[i].x <= Pi.x) {
+      Sl[i].x = Pi.x;
+      Sl[i].y = Pi.y;
+      n_sl++;
     }
   }
+  
+  for(i = 0; i < size_s; i++) {
+   if(T.y >= Pj.x) {
+     Sr[i].x = Pj.x;
+     Sr[i].y = Pj.y;
+     n_sr++;
+   }
+  }
+  
+  if(Pi.x == lo) {
+    print(" %d", &i);
+  } else {
+    connect(lo, Pi.x, n_sl, Sl);
+  }
+  if(Pj.x == hi) {
+    print(" %d", &j);
+  } else {
+    connect(Pj.x, hi, n_sr, Sr);
+  }
+}
+
+int upper_hull(points *p_points, int lo, int hi) {
+  
+  points T[size];
    
-  if(x_min == x_max) print(" %d", &x_min);
+  if(p_points[lo].x == p_points[hi].x) {
+    print(" %d", p_points[lo]);
+    exit(1);
+  }
   //constructing the upper hull 
-  for(i = 1; i < size; i++) {
+  for(i = 0; i < size; i++) {
     
-    if(p_points[i].y >= p_points[p_min].y && p_points[i].y >= p_points[p_max].y) {
+    if(p_points[i].y >= p_points[lo].y && p_points[i].y >= p_points[hi].y) {
       T[i].x = p_points[i].x;
       T[i].y = p_points[i].y;
     }
   }
    
-  return connect(x_min, x_max, T)
+  return connect(lo, hi, size, T);
 }
