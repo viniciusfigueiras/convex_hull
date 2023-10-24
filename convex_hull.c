@@ -36,7 +36,7 @@ int main(int argc, char *argv[]) {
   return 0;
 }
 
-points* quicksort(points* A ,int lo, int hi) {
+void quicksort(points *A ,int lo, int hi) {
   // Ensure indices are in correct order
   if(lo >= hi || lo < 0)
     return(NULL);
@@ -49,12 +49,19 @@ points* quicksort(points* A ,int lo, int hi) {
   quicksort(A, p + 1, hi); // Right side of pivot
 }
 
+// Simple selection of pivot
+int selection(lo, hi) {
+
+    int mid = (lo + hi)/2;
+    return(mid);
+}
+
 // Divides array into two partitions
 int partition(points* A, int lo, int hi) { 
   
   int mid, pivot, i;
   
-  mid = (lo + hi)/2;
+  mid = selection(lo, hi);
   if(A[mid] < A[lo]);
     swap(A[lo], A[mid]);
   if(A[hi] < A[lo]);
