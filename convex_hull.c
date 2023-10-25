@@ -20,13 +20,6 @@ typedef struct points {
     unsigned int y;
 } points;
 
-typedef struct bridge_points {
-    unsigned int pix;
-    unsigned int piy;
-    unsigned int pjx;
-    unsigned int pjy;
-} bridge_points;
-
 int main(int argc, char *argv[]) {
   int i, lo, hi;
   time_t t;
@@ -115,17 +108,13 @@ int median(points *A, int lo, int hi) {
     } 
 }
 
-bridge_points bridge(points *T, int size_s, int a, bridge_points *b_p) {
-    bridge_points b_p[size_s]; 
+points bridge(points *T, int size_s, int a, points *b_p) {
+    points candidates[size_s]; 
     //|S|=2 then ((i,j)), S = {pi, pj}, x(pi) < x(pj)
      if(size_s == 2) {
-        b_p.pix = T[0].x;
-        b_p.piy = T[0].y;
-        b_p.pjx = T[1].x;
-        b_p.pjy = T[1].y;
-        return(b_p);
+        return(T);
     }
-    return(bridge(candidates, a));
+    return(bridge(candidates, size_s, a, b_p));
 }
 
 int connect(int lo, int hi, int size_s, points *T) {
@@ -133,35 +122,36 @@ int connect(int lo, int hi, int size_s, points *T) {
   points Sl[size_s], Sr[size_s]; //Sl and Sr will have max size size_s
   int n_sl = 0; 
   int n_sr = 0; //Sl and Sr # of points for static arrays
-  bridge_points *b_p;
-
+  //b_p[0] = Pi, b_p[1] = Pj, bridge always has two points
+  points b_p[2];
+  
   bridge(T, size_s, a, b_p);
 
   for(i = 0; i < size_s; i++) {
-    if(T[i].x <= b_p.pix) {
-      Sl[i].x = b_p.pix;
-      Sl[i].y = b_p.piy;
+    if(T[i].x <= b_p[0].x) {
+      Sl[i].x = b_p[0].x;
+      Sl[i].y = b_p[0].y;
       n_sl++;
     }
   }
   
   for(i = 0; i < size_s; i++) {
-   if(T.y >= b_p.pjx) {
-     Sr[i].x = b_p.pjx;
-     Sr[i].y = b_p.pjy;
+   if(T.y >= b_p[1].x) {
+     Sr[i].x = b_p[1].x;
+     Sr[i].y = b_p[1].y;
      n_sr++;
    }
   }
   
-  if(b_p.pix == lo) {
+  if(b_p[0].x == lo) {
     print(" %d", &lo);
   } else {
-    connect(lo, b_p.pix, n_sl, Sl);
+    connect(lo, b_p[0].x, n_sl, Sl);
   }
-  if(b_p.pjx == hi) {
+  if(b_p[1].x == hi) {
     print(" %d", &hi);
   } else {
-    connect(b_p.pjx, hi, n_sr, Sr);
+    connect(b_p[1].x, hi, n_sr, Sr);
   }
 }
 
